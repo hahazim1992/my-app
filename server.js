@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 // Allow only your frontend domain
 const corsOptions = {
-  origin: 'https://todolist-two.onrender.com',
+  origin: ['https://todolist-two.onrender.com', 'http://localhost:4200'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
