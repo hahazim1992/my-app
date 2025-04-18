@@ -1,45 +1,35 @@
 const express = require('express');
-const mysql = require('mysql2');
-const bodyParser = require('body-parser');
+const { Client } = require('pg');
 
 const app = express();
-app.use(bodyParser.json());
+const port = process.env.PORT || 3000;
 
-// MySQL connection
-const db = mysql.createConnection({
-  host: 'localhost',  // this will change for production
-  user: 'your_mysql_user',
-  password: 'your_mysql_password',
-  database: 'your_database_name'
+// Connect to PostgreSQL using the connection details from Render
+const client = new Client({
+  host: 'dpg-d00c0r9r0fns73e49nqg-a',
+  user: 'db_e2e_testing_user',
+  password: '6WDVw6awVmKX1knj93AzKTsWzcFbBmmQ',
+  database: 'db_e2e_testing',
+  port: 5432, // Default PostgreSQL port
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
-  console.log('connected to MySQL as id ' + db.threadId);
+client.connect(err => {
+  if (err) throw err;
+  console.log('Connected to the PostgreSQL database');
 });
 
-// Define POST request
-app.post('/api/data', (req, res) => {
-  const { data } = req.body;
-  const query = 'INSERT INTO your_table (data_column) VALUES (?)';
-  db.query(query, [data], (err, result) => {
-    if (err) throw err;
-    res.send({ message: 'Data inserted successfully!' });
-  });
+// Example POST route
+app.post('/data', (req, res) => {
+  // Insert data logic for PostgreSQL
+  res.json({ message: 'Data saved successfully' });
 });
 
-// Define GET request
-app.get('/api/data', (req, res) => {
-  db.query('SELECT * FROM your_table', (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
+// Example GET route
+app.get('/data', (req, res) => {
+  // Fetch data logic from PostgreSQL
+  res.json({ message: 'Fetched data successfully' });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
